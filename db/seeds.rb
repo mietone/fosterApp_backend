@@ -5,3 +5,21 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+
+litters = Litter.create(
+  [
+    {
+      name: "A-2019", 
+      with_mom: false
+    },
+    {
+      name: "D4 2018", 
+      with_mom: false
+    },
+    {
+      name: "C5 2017", 
+      with_mom: true
+    },
+  ]
+)

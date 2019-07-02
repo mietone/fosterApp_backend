@@ -34,11 +34,13 @@ users = User.create(
   [
     {
       name: "TinyKittens",
-      email: "tk@email.com"
+      email: "tk@email.com",
+      password: "1234"
     },
     {
       name: "BestFriends",
-      email: "bf@email.com"
+      email: "bf@email.com",
+      password: "1234"
     }
   ]
 )

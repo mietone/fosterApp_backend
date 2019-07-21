@@ -1,6 +1,7 @@
 module Api::V1
   class KittensController < ApplicationController
-    before_action :set_kitten, only: [:show, :update, :destroy]
+    before_action :find_litter, only: [:new, :create]
+    before_action :set_kitten, only: [:show, :edit, :update, :destroy]
 
     # GET /kittens
     def index
@@ -16,10 +17,10 @@ module Api::V1
 
     # POST /kittens
     def create
-      @kitten = Kitten.new(kitten_params)
+      @kitten = @litter.kittens.new(kitten_params)
 
       if @kitten.save
-        render json: @kitten, status: :created, location: @kitten
+        render json: @kitten, status: :created
       else
         render json: @kitten.errors, status: :unprocessable_entity
       end
@@ -47,7 +48,7 @@ module Api::V1
 
       # Only allow a trusted parameter "white list" through.
       def kitten_params
-        params.require(:kitten).permit(:name, :dob, :image, :gender, :litter_id, :user_id)
+        params.require(:kitten).permit(:name, :dob, :image, :gender, :litter_id, :user_id, :_destroy)
       end
   end
 end

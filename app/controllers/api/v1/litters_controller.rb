@@ -4,29 +4,22 @@ module Api::V1
 
     # GET /litters
     def index
-      litter = Litter.all.map do |litter|
-        {
-          id: litter.id,
-          name: litter.name,
-          start_date: litter.start_date,
-          end_date: litter.end_date
-        }
-      end
+      @litters = Litter.all.order("start_date DESC")
 
-      render json: litter
+      render json: @litters
     end
 
     # GET /litters/1
     def show
-      render json: litter_json(@litter)
+      render json: @litter
     end
 
     # POST /litters
     def create
       @litter = Litter.new(litter_params)
 
-      if result = @litter.save
-        render litter_json(@litter), status: result ? 200 : 422
+      if @litter.save
+        render json: @litter, status: :created
       else
         render json: @litter.errors, status: :unprocessable_entity
       end
@@ -34,9 +27,8 @@ module Api::V1
 
     # PATCH/PUT /litters/1
     def update
-      @litter.attributes = litter_params
-      if result = @litter.update(litter_params)
-        render litter_json(@litter), status: result ? 200 : 422
+      if @litter.update(litter_params)
+        render json: @litter
       else
         render json: @litter.errors, status: :unprocessable_entity
       end
@@ -45,28 +37,9 @@ module Api::V1
     # DELETE /litters/1
     def destroy
       @litter.destroy
-      render json: { result: ok }
     end
 
     private
-
-      def litter_json(litter)
-        {
-          id: litter.id,
-          name: litter.name,
-          start_date: litter.start_date,
-          end_date: litter.end_date,
-          kittens: litter.kittens.map do |kitten|
-            {
-              id: kitten.id,
-              name: kitten.name,
-              dob: kitten.dob,
-              gender: kitten.gender
-            }
-          end
-        }
-      end
-
       # Use callbacks to share common setup or constraints between actions.
       def set_litter
         @litter = Litter.find(params[:id])

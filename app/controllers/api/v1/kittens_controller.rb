@@ -17,7 +17,7 @@ module Api::V1
 
     # POST /kittens
     def create
-      @kitten = @litter.kittens.new(kitten_params)
+      @kitten = @litter.Kitten.new(kitten_params)
 
       if @kitten.save
         render json: @kitten, status: :created

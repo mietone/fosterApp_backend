@@ -1,6 +1,6 @@
 module Api::V1
   class LittersController < ApplicationController
-    before_action :set_litter, only: [:show, :edit, :update, :destroy]
+    before_action :set_litter, only: [:show, :update, :destroy]
 
     # GET /litters
     def index
@@ -17,6 +17,10 @@ module Api::V1
     # POST /litters
     def create
       @litter = Litter.new(litter_params)
+      # binding.pry
+      @litter.kittens.each do |kitten|
+        @litter.kitten.build(kitten_params)
+      end
 
       if @litter.save
         render json: @litter, status: :created
@@ -36,7 +40,11 @@ module Api::V1
 
     # DELETE /litters/1
     def destroy
-      @litter.destroy
+      if @litter.destroy
+        render json: { message: "removed" }, status: :ok
+      else
+        render json: {message: "Unable to remove litter"}, status: 400
+      end
     end
 
     private
@@ -53,7 +61,6 @@ module Api::V1
           :end_date,
           :with_mom,
           kittens_attributes: [
-            :id,
             :name,
             :gender,
             :dob,
@@ -63,5 +70,10 @@ module Api::V1
           ]
         )
       end
+
+      def kitten_params
+        params.require(:kitten).permit(:name, :dob, :image, :gender, :litter_id, :user_id, :_destroy)
+      end
+
   end
 end
